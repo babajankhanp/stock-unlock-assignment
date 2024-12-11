@@ -411,9 +411,9 @@ function transformStockData(
 
   // Convert data entries to array and sort by timestamp
   const sortedData = Object.entries(data)
-    .map(([timestampStr, values]) => ({
-      timestamp: parseInt(timestampStr),
-      close: values.close
+    .map(([timestamp, values]) => ({
+      timestamp: parseInt(timestamp),
+      ...values
     }))
     .sort((a, b) => a.timestamp - b.timestamp);
 
@@ -615,21 +615,10 @@ export default function Chart() {
     return null;
   };
 
-  // Add this to calculate total invested value and current portfolio value
-  const [totalInvestedValue, currentPortfolioValue] = React.useMemo(() => {
-    if (stockData.length === 0) return [0, 0];
-    const lastDataPoint = stockData[stockData.length - 1];
-
-    // Calculate total invested value from transactions
-    const invested = stockToTransactions.GOOGL.reduce((total, transaction) => {
-      if (transaction.action === 'B') {
-        return total + (transaction.price * transaction.quantity);
-      } else {
-        return total - (transaction.price * transaction.quantity);
-      }
-    }, 0);
-
-    return [invested, lastDataPoint.portfolioValue];
+  // Add this to calculate current portfolio value
+  const currentPortfolioValue = React.useMemo(() => {
+    if (stockData.length === 0) return 0;
+    return stockData[stockData.length - 1].portfolioValue;
   }, [stockData]);
 
   return (
@@ -642,42 +631,17 @@ export default function Chart() {
         marginBottom: '20px'
       }}>
         <div>
-          <Title>Google Stock Portfolio Analysis</Title>
+          <Title>Google Stock Portfolio  Analysis</Title>
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
             marginTop: '8px'
           }}>
-            <div style={{
-              fontSize: '24px',
-              fontWeight: 'bold',
-              color: theme.palette.text.primary,
-            }}>
-              Current Value: ${currentPortfolioValue.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}
-            </div>
-            <div style={{
-              fontSize: '18px',
-              color: theme.palette.text.secondary,
-            }}>
-              Invested: ${totalInvestedValue.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}
-            </div>
-            <div style={{
-              fontSize: '18px',
-              fontWeight: 'bold',
-              color: currentPortfolioValue > totalInvestedValue ? 'green' : 'red',
-            }}>
-              {currentPortfolioValue > totalInvestedValue ? 'Profit' : 'Loss'}: ${Math.abs(currentPortfolioValue - totalInvestedValue).toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })} ({((currentPortfolioValue - totalInvestedValue) / totalInvestedValue * 100).toFixed(2)}%)
-            </div>
+            Current Portfolio Value: ${currentPortfolioValue.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })}
           </div>
         </div>
         <TimeRangeSelector />
