@@ -454,7 +454,7 @@ export default function Chart() {
               type="monotone"
               dataKey="portfolioValue"
               stroke={theme.palette.primary.main}
-              dot={(props) => {
+              dot={(props: any): React.ReactElement | null => {
                 const { payload } = props;
                 if (payload.transaction) {
                   return (
