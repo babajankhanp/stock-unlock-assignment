@@ -276,7 +276,25 @@ export default function Chart() {
                     maximumFractionDigits: 2
                   })}
                 </div>
-                <div style={{
+
+              </>
+            )}
+          </div>
+        </div>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '10px'
+        }}>
+          <TimeRangeSelector />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+            fontSize: '14px'
+          }}>
+             <div style={{
                   fontSize: '18px',
                   fontWeight: 'bold',
                   color: stockData[stockData.length - 1].unrealizedGainLoss >= 0 ? 'green' : 'red',
@@ -289,42 +307,7 @@ export default function Chart() {
                   ({((stockData[stockData.length - 1].unrealizedGainLoss /
                      stockData[stockData.length - 1].totalInvestment) * 100).toFixed(2)}%)
                 </div>
-              </>
-            )}
           </div>
-        </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          gap: '10px'
-        }}>
-          <TimeRangeSelector />
-          {/* <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px',
-            fontSize: '14px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: 'green'
-              }} />
-              <span>Bought Shares</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: 'red'
-              }} />
-              <span>Sold Shares</span>
-            </div>
-          </div> */}
         </div>
       </div>
 
