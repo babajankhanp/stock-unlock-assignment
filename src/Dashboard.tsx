@@ -174,7 +174,7 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 700,
                   }}
                 >
                   <Chart />
@@ -187,7 +187,7 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 400,
                   }}
                 >
                   <Deposits />
