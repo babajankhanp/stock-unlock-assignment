@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, DotProps } from 'recharts';
+import { AreaChart,Area, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, DotProps } from 'recharts';
 import Title from './Title';
 import { stockToTransactions } from './utils/stocksTrans';
+
 
 interface Transaction {
   action: 'B' | 'S';
@@ -299,7 +300,7 @@ export default function Chart() {
           gap: '10px'
         }}>
           <TimeRangeSelector />
-          <div style={{
+          {/* <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '20px',
@@ -323,84 +324,41 @@ export default function Chart() {
               }} />
               <span>Sold Shares</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
       {/* Chart container with increased height */}
       <div style={{ height: '600px', width: '100%' }}>
-        <ResponsiveContainer>
-          <LineChart
-            data={filteredData}
-            margin={{
-              top: 20,
-              right: 30,
-              bottom: 60,
-              left: 60,
-            }}
-          >
-            <XAxis
-              dataKey="date"
-              stroke={theme.palette.text.secondary}
-              style={theme.typography.body2}
-              height={60}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric'
-                });
-              }}
-              angle={-45}
-              textAnchor="end"
-              interval={'preserveStartEnd'}
-              dy={20}
-            />
-            <YAxis
-              stroke={theme.palette.text.secondary}
-              style={theme.typography.body2}
-              tickFormatter={(value) => `$${value.toLocaleString()}`}
-            >
-              <Label
-                angle={270}
-                position="left"
-                style={{
-                  textAnchor: 'middle',
-                  fill: theme.palette.text.primary,
-                  ...theme.typography.body1,
-                }}
-              >
-                Price ($)
-              </Label>
-            </YAxis>
-            <Tooltip content={<CustomTooltip />} />
-
-
-<Line
-  type="monotone"
-  dataKey="portfolioValue"
-  stroke={theme.palette.primary.main}
-  dot={(props: DotProps) => {
-    // Ensure props are checked correctly
-    if (!props.cx || !props.cy || !props.payload || !props.payload.transaction) {
-      return null;
-    }
-
-    // Return a custom dot element
-    return (
-      <circle
-        cx={props.cx}
-        cy={props.cy}
-        r={4}
-        fill={props.payload.transaction.action === 'B' ? 'green' : 'red'}
-        stroke="none"
-      />
-    );
-  }}
-/>
-
-          </LineChart>
-        </ResponsiveContainer>
+        <ResponsiveContainer width="100%" height={400}>
+        <AreaChart
+          data={filteredData}
+          margin={{
+            top: 16,
+            right: 16,
+            bottom: 0,
+            left: 0,
+          }}
+        >
+          <XAxis
+            dataKey="date"
+            stroke={theme.palette.text.secondary}
+             tickFormatter={(date) => {
+        const options = { month: 'short', year: '2-digit' }; // Format as "Mar 23"
+        return new Date(date).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+      }}
+          />
+          <YAxis />
+          <Tooltip content={<CustomTooltip />} />
+          <Area
+            type="monotone"
+            dataKey="portfolioValue"
+            stroke={theme.palette.primary.main}
+            fill={theme.palette.primary.light}
+            activeDot={{ r: 8 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
       </div>
     </React.Fragment>
   );

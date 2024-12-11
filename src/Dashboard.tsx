@@ -171,10 +171,11 @@ export default function Dashboard() {
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: 4,
                     display: 'flex',
                     flexDirection: 'column',
                     height: 700,
+                     width:"100%"
                   }}
                 >
                   <Chart />
