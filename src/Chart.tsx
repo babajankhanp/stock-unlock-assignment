@@ -239,6 +239,23 @@ export default function Chart() {
     return stockData[stockData.length - 1].portfolioValue;
   }, [stockData]);
 
+  const formatUnrealizedGainLoss = (unrealizedGainLoss: any, totalInvestment: number) => {
+  // Ensure unrealizedGainLoss is treated as a number
+  const gainLoss = Number(unrealizedGainLoss);
+
+  // Return 0 if it's not a valid number or totalInvestment is 0
+  if (isNaN(gainLoss) || totalInvestment === 0) return { value: 0, percentage: 0 };
+
+  // Calculate the absolute value
+  const absGainLoss = Math.abs(gainLoss);
+
+  // Calculate the percentage based on total investment
+  const percentage = (gainLoss / totalInvestment) * 100;
+
+  return { value: absGainLoss, percentage: percentage.toFixed(2) };
+};
+
+
   return (
     <React.Fragment>
       {/* Header section with title and current value */}
@@ -294,19 +311,28 @@ export default function Chart() {
             gap: '20px',
             fontSize: '14px'
           }}>
-             <div style={{
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  color: stockData[stockData.length - 1].unrealizedGainLoss >= 0 ? 'green' : 'red',
-                }}>
-                  {stockData[stockData.length - 1].unrealizedGainLoss >= 0 ? 'Profit' : 'Loss'}: $
-                  {Math.abs(stockData[stockData.length - 1].unrealizedGainLoss).toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
-                  ({((stockData[stockData.length - 1].unrealizedGainLoss /
-                     stockData[stockData.length - 1].totalInvestment) * 100).toFixed(2)}%)
-                </div>
+            <div style={{
+  fontSize: '18px',
+  fontWeight: 'bold',
+  color: stockData.length > 0 && !isNaN(stockData[stockData.length - 1].unrealizedGainLoss) && stockData[stockData.length - 1].unrealizedGainLoss >= 0 ? 'green' : 'red',
+}}>
+  {stockData.length > 0 ?
+<>
+    {stockData[stockData.length - 1].unrealizedGainLoss >= 0 ? 'Profit' : 'Loss'}: $
+      {formatUnrealizedGainLoss(stockData[stockData.length - 1].unrealizedGainLoss, stockData[stockData.length - 1].totalInvestment).value.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}
+
+</>
+    : 'Loading...'}
+  {stockData.length > 0 && (
+    <div>
+      ({formatUnrealizedGainLoss(stockData[stockData.length - 1].unrealizedGainLoss, stockData[stockData.length - 1].totalInvestment).percentage}%)
+    </div>
+  )}
+</div>
+
           </div>
         </div>
       </div>
